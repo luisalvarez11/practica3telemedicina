@@ -1,7 +1,7 @@
 var express = require("express");
 var jwt = require('jwt-simple');
 var clave = 'miSecretoMasOscuro';
-var conexion = require("./conexion_postgres.js")
+
 var app = express();
 app.listen(3000);
 //ar datos = require("./datos.js");

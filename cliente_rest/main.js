@@ -228,6 +228,7 @@ function calcularRanking(envios){ //preguntar si estas comprobaciones están bie
             totales[area] = (totales[area] || 0) + 1; //contamos las totales por área.
         }
     }
+    console.log(descartadas);
 
     // pasar a array y ordenar de mayor a menor
     var ranking = [];

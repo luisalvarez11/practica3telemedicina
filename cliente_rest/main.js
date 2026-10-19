@@ -90,6 +90,10 @@ function formatearFecha(f) {
 }
 
 var id_area = 3;
+function categoriaDe(r){
+    return r["categor\u00eda"] !== undefined ? r["categor\u00eda"] : r["categoria"];
+}
+
 function enviarReservas() { //solo una ? si hay varias query &.
 
     rest.get("/api/recursos?categoria=Todos&modelo=Todos&ubicacion=Todos&estado=Todos&token="+token, function(estado, recursos) {
@@ -106,15 +110,17 @@ function enviarReservas() { //solo una ? si hay varias query &.
 
         if (totalRecursos === 0) return; // Por si no hay recursos
 
+
         for (let i = 0; i < recursos.length; i++) {
             
             // CORRECCIÓN: Usar recursos[i].id en lugar de id suelto
             rest.get("/api/recursos/" + recursos[i].id + "/reservas"+"?token=" + token, function(estado, reservas) { 
                 
                 if (estado == 200 && reservas) {
+                    
                     for (let j = 0; j < reservas.length; j++) {
                         // CORRECCIÓN: Usar la j del bucle, no la i
-                        let reserva_actual = reservas[j]; 
+                        let reserva_actual = reservas[j];
                         let nueva_reserva = {
                             nombre: reserva_actual.sanitario_nombre,
                             apellidos: reserva_actual.sanitario_apellidos,
@@ -124,6 +130,7 @@ function enviarReservas() { //solo una ? si hay varias query &.
                             fec_ini: formatearFecha(reserva_actual.fecha_inicio),
                             fecha_fin: formatearFecha(reserva_actual.fecha_fin)
                         };
+                        console.log(fec)
                         // CORRECCIÓN: empujar a datosr
                         datosr.push(nueva_reserva); 
                     }
@@ -134,7 +141,6 @@ function enviarReservas() { //solo una ? si hay varias query &.
                 // Cuando todas las peticiones GET han terminado, hacemos el POST
                 if (contadorRecursos == totalRecursos) {
                     console.log("Todas las reservas han sido cargadas");
-                    console.log(contadorRecursos);
 
                     // EL POST DEBE IR AQUÍ DENTRO, cuando datosr ya está lleno. Si lo pongo fuera, el datosr, va a estar sin acabar. 
                     var fecha = formatearFecha(new Date());
@@ -161,7 +167,7 @@ function enviarReservas() { //solo una ? si hay varias query &.
 }
 function buscarRanking(){
     ranking_tabla.innerHTML = "";
-    rest.get("https://undefined.ua.es/telemedicina/api/datos?", function(estado, envios){
+    rest.get("https://undefined.ua.es/telemedicina/api/datos", function(estado, envios){
         if(estado != 200 || !Array.isArray(envios)){
             console.log("Error al obtener los datos del ministerio", estado);
             return;
@@ -191,6 +197,7 @@ function buscarRanking(){
 function calcularRanking(envios){ //preguntar si estas comprobaciones están bien y si son suficientes.
     var totales = {};      // {id_area: nº reservas}
     var vistas = {};       // para descartar duplicados
+    var descartadas = 0;
 
     for(var i = 0; i < envios.length; i++){//lista de todos los objetos enviados.
         var envio = envios[i]; //esto es un objeto
@@ -204,14 +211,20 @@ function calcularRanking(envios){ //preguntar si estas comprobaciones están bie
             var r = envio.datos[j];
 
             // reserva válida: mínimo nombre, apellidos y categoría
-            if(!r || !r.nombre || !r.apellidos || !r.categoria) continue; //saltamos las reservas basura.
+            if(!r || !r.nombre || !r.apellidos || !categoriaDe(r)) {
+                descartadas++; 
+                continue; //saltamos las reservas basura.
+            }
 
             // clave única para no contar dos veces la misma reserva
-            var clave = area + "|" + r.nombre + "|" + r.apellidos + "|" + r.categoria
-                      + "|" + r.fec_pet + "|" + r.fec_ini + "|" + r.horas_estimadas;
-            if(vistas[clave]) continue; //si está, no la metemos.
+            var clave = area + "|" + r.nombre + "|" + r.apellidos + "|" + categoriaDe(r)
+            + "|" + r.fec_pet + "|" + r.fec_ini + "|" + r.horas_estimadas;
+            if(vistas[clave]) {
+                descartadas++; 
+                continue; //si está, no la metemos
+            }
             vistas[clave] = true;
-
+            
             totales[area] = (totales[area] || 0) + 1; //contamos las totales por área.
         }
     }
@@ -890,7 +903,7 @@ function abrir(id){
 
     if(recurso_actual_id != null){ 
         // EDITAR
-        rest.put("/api/recursos/" + recurso_actual_id, recurso+"?token=" + token, function(estado,respuesta){
+        rest.put("/api/recursos/" + recurso_actual_id +"?token=" + token, recurso, function(estado,respuesta){
             if(estado == 200){
                 alert("Recurso actualizado");
             }

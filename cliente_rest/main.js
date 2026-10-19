@@ -160,7 +160,7 @@ function enviarReservas() { //solo una ? si hay varias query &.
 }
 function buscarRanking(){
     ranking_tabla.innerHTML = "";
-    rest.get("https://undefined.ua.es/telemedicina/api/datos?token="+token, function(estado, envios){
+    rest.get("https://undefined.ua.es/telemedicina/api/datos?", function(estado, envios){
         if(estado != 200 || !Array.isArray(envios)){
             console.log("Error al obtener los datos del ministerio", estado);
             return;

@@ -211,7 +211,7 @@ function calcularRanking(envios){ //preguntar si estas comprobaciones están bie
             var r = envio.datos[j];
 
             // reserva válida: mínimo nombre, apellidos y categoría
-            if(!r || !r.nombre || !r.apellidos || !categoriaDe(r)) {
+            if(!r || !r.nombre || !r.apellidos || !categoriaDe(r) || r.horas_estimadas == 0) {
                 descartadas++; 
                 continue; //saltamos las reservas basura.
             }

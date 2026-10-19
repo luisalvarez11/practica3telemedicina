@@ -14,7 +14,7 @@ const { createClient } = require('@supabase/supabase-js');
 //2. configurar con tu URL y public key (anon key)
 const supabaseUrl = 'https://qpkbfrjwzanupxzwjtui.supabase.co';
 const supabaseKey = 'sb_publishable_IX1FsYJfE6ZyFQEIGRvnLQ_0vufdU82'
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(supabaseUrl,supabaseKey);
 
 //200 OK
 //201 creado OK

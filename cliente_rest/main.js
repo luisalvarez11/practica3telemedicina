@@ -134,6 +134,7 @@ function enviarReservas() { //solo una ? si hay varias query &.
                 // Cuando todas las peticiones GET han terminado, hacemos el POST
                 if (contadorRecursos == totalRecursos) {
                     console.log("Todas las reservas han sido cargadas");
+                    console.log(contadorRecursos);
 
                     // EL POST DEBE IR AQUÍ DENTRO, cuando datosr ya está lleno. Si lo pongo fuera, el datosr, va a estar sin acabar. 
                     var fecha = formatearFecha(new Date());

@@ -130,7 +130,6 @@ function enviarReservas() { //solo una ? si hay varias query &.
                             fec_ini: formatearFecha(reserva_actual.fecha_inicio),
                             fecha_fin: formatearFecha(reserva_actual.fecha_fin)
                         };
-                        console.log(fec)
                         // CORRECCIÓN: empujar a datosr
                         datosr.push(nueva_reserva); 
                     }

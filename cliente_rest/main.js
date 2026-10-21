@@ -814,7 +814,7 @@ function abrir(id){
                     
                     var fila = document.createElement("tr") // hacemos esto para cada reserva del recurso.
                     var sanitario = document.createElement("td");
-                    sanitario.textContent = lista_reservas[i].sanitario;
+                    sanitario.textContent = lista_reservas[i].sanitario_nombre;
                     fila.appendChild(sanitario);
                     var horas = document.createElement("td");
                     horas.textContent = lista_reservas[i].horas_estimadas;
